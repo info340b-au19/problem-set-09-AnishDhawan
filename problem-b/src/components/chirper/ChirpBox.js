@@ -1,6 +1,6 @@
 import React, { Component } from 'react'; //import React Component
 import './Chirper.css'; //load module-specific CSS
-
+import firebase from 'firebase/app';
 //A form the user can use to post a Chirp
 export default class ChirpBox extends Component {
   constructor(props){
@@ -16,17 +16,23 @@ export default class ChirpBox extends Component {
   //post a new chirp to the database
   postChirp = (event) => {
     event.preventDefault(); //don't submit
-    
+
     /* TODO: add a new Chirp to the database */
-
-
+    let newChirp = {text: this.state.post,
+       userId: this.props.currentUser.uid,
+       userName: this.props.currentUser.displayName,
+       userPhoto: this.props.currentUser.photoURL,
+       time: firebase.database.ServerValue.TIMESTAMP
+     };
+     let temp = firebase.database().ref("chirps");
+     temp.push(newChirp);
     this.setState({post:''}); //empty out post for next time
   }
 
   //You do not need to modify this method!
   render() {
     let user = this.props.currentUser; //the current user (convenience)
-
+    console.log(user);
     return (
       <div className="container">
         <div className="row py-3 chirp-box">
@@ -35,8 +41,8 @@ export default class ChirpBox extends Component {
           </div>
           <div className="col pl-4 pl-lg-1">
             <form>
-              <textarea name="text" className="form-control mb-2" placeholder="What's Happening...?" 
-                value={this.state.post} 
+              <textarea name="text" className="form-control mb-2" placeholder="What's Happening...?"
+                value={this.state.post}
                 onChange={this.updatePost}
                 />
 
@@ -44,15 +50,15 @@ export default class ChirpBox extends Component {
               {this.state.post.length > 140 &&
                 <small className="form-text">140 character limit!</small>
               }
-              
+
               <div className="text-right">
                 {/* Disable if invalid post length */}
-                <button className="btn btn-primary" 
+                <button className="btn btn-primary"
                   disabled={this.state.post.length === 0 || this.state.post.length > 140}
-                  onClick={this.postChirp} 
+                  onClick={this.postChirp}
                   >
                   <i className="fa fa-pencil-square-o" aria-hidden="true"></i> Share
-                </button> 					
+                </button>
               </div>
             </form>
           </div>

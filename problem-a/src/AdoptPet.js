@@ -11,9 +11,9 @@ class AdoptPage extends Component {
   }
 
   componentDidMount(){
-    let petName = ''; //REPLACE THIS WITH CORRECT VALUE
-
-    //pretend we loaded external data    
+    let petName = this.props.match.params.nameID.charAt(0).toUpperCase() +this.props.match.params.nameID.slice(1);
+    console.log(petName, typeof(petName));
+    //pretend we loaded external data
     let petObj =  _.find(SAMPLE_DOGS, {name: petName}); //find pet in data
     this.setState({pet: petObj});
   }
@@ -33,7 +33,7 @@ class AdoptPage extends Component {
         <h2>Adopt {pet.name}</h2>
         <p className="lead">{pet.sex} {pet.breed}</p>
         <UncontrolledCarousel
-          items={carouselItems} 
+          items={carouselItems}
           indicators={false}
           controls={true}
           />
